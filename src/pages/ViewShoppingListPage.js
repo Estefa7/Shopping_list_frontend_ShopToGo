@@ -2,9 +2,9 @@ import React, {useState} from "react";
 import {shoppingList} from "../data/shoppingList.js";
 import Header from "../components/ViewPage/Header.js";
 import ItemList from "../components/ViewPage/ItemList.js";
-import LeaveListButton from "..components/ViewPage/LeaveListButton.js";
-import MembersSection from "..components/ViewPage/MembersSection.js";
-import ArchiveButton from "..components/ViewPage/ArchiveButton.js";
+import LeaveListButton from "../components/ViewPage/LeaveListButton.js";
+import MembersSection from "../components/ViewPage/MembersSection.js";
+import ArchiveButton from "../components/ViewPage/ArchiveButton.js";
 
 function ViewShoppingListPage() {
     const [items, setItems] = useState(shoppingList.items);
