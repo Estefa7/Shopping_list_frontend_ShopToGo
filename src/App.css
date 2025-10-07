@@ -3,20 +3,36 @@
   max-width: 600px;
   margin: 40px auto;
   padding: 20px;
-  background-color: #fdfdfd;
-  border-radius: 12px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  background-color: #f4f8f7;
+  border-radius: 16px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
 }
 
 h1 {
-  font-size: 24px;
+   font-size: 24px;
   margin-bottom: 10px;
+  background-color: #e6e0f8; 
+  padding: 10px;
+  border-radius: 8px;
+
 }
+
+p {
+  background-color: #dff0ef; 
+  padding: 8px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
 
 h3 {
   margin-top: 30px;
   margin-bottom: 10px;
   font-size: 18px;
+  background-color: #e0f8e6; 
+  padding: 8px;
+  border-radius: 6px;
+
 }
 
 button {
@@ -36,10 +52,22 @@ button:hover {
 
 ul {
   padding-left: 20px;
+  margin-bottom: 20px;
 }
 
 li {
   margin-bottom: 4px;
+}
+
+
+.ItemCard {
+  background-color: #f0f4ff; 
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 
