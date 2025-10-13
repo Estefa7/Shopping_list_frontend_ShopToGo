@@ -1,43 +1,67 @@
-import React, {useState} from "react";
-import {shoppingList} from "../data/shoppingList.js";
-import Header from "../components/ViewPage/Header.js";
-import ItemList from "../components/ViewPage/ItemList.js";
-import LeaveListButton from "../components/ViewPage/LeaveListButton.js";
-import MembersSection from "../components/ViewPage/MembersSection.js";
-import ArchiveButton from "../components/ViewPage/ArchiveButton.js";
+import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useShoppingLists } from "../context/ShoppingListContext";
+import Header from "../components/ViewPage/Header";
+import ItemList from "../components/ViewPage/ItemList";
+import MembersSection from "../components/ViewPage/MembersSection";
+import LeaveListButton from "../components/ViewPage/LeaveListButton";
+import ArchiveButton from "../components/ViewPage/ArchiveButton";
+import BackButton from "../components/EditPage/BackButton";
 
 function ViewShoppingListPage() {
-    const [items, setItems] = useState(shoppingList.items);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const handleBack = () => navigate("/");
+  const { lists, updateList, archiveList, leaveList } = useShoppingLists();
+  
+  const shoppingList = lists.find((list) => list.id === Number(id));
 
-    const handleResolve = (id) => {
-        setItems((prev) =>
-        prev.map((item) =>
-        item.id === id ? { ...item, resolved: true }:item
-    )
-);
-    };
+  const [items, setItems] = useState(shoppingList ? shoppingList.items : []);
 
-    const handleUnresolve = (id) => {
-        setItems((prev) =>
-        prev.map((item) =>
-        item.id === id ? {...item, resolved: false}:item
-    )
-);
-    };
+  if (!shoppingList) {
+    return <p>Shopping list not found.</p>;
+  }
 
-    return (
-        <div>
-        <Header listName={shoppingList.name} ownerName={shoppingList.owner} />
-        <MembersSection members={shoppingList.members}/>
-        <ItemList
-        items={items}
-        onResolveItem={handleResolve}
-        onUnresolveItem={handleUnresolve}
-        />
-        <ArchiveButton onArchiveList={()=>alert("List archived")}/>
-            <LeaveListButton onLeaveList={()=>alert("Left the list")}/>
-                </div>
+  const handleResolveItem = (itemId) => {
+    const updatedItems = items.map((item) =>
+      item.id === itemId ? { ...item, resolved: true } : item
     );
+    setItems(updatedItems);
+    updateList(shoppingList.id, { items: updatedItems });
+  };
+
+  const handleUnresolveItem = (itemId) => {
+    const updatedItems = items.map((item) =>
+      item.id === itemId ? { ...item, resolved: false } : item
+    );
+    setItems(updatedItems);
+    updateList(shoppingList.id, { items: updatedItems });
+  };
+
+  const handleArchive = () => {
+    archiveList(shoppingList.id);
+    navigate("/archive");
+  };
+
+  const handleLeave = () => {
+    leaveList(shoppingList.id);
+    navigate("/");
+  };
+
+  return (
+    <div>
+      <BackButton onBack={handleBack} />
+      <Header listTitle={shoppingList.title} ownerName={shoppingList.owner} />
+      <MembersSection members={shoppingList.members} />
+      <ItemList
+        items={items}
+        onResolveItem={handleResolveItem}
+        onUnresolveItem={handleUnresolveItem}
+      />
+      <ArchiveButton onArchiveList={handleArchive} />
+      <LeaveListButton onLeaveList={handleLeave} />
+    </div>
+  );
 }
 
 export default ViewShoppingListPage;
