@@ -5,6 +5,7 @@ import EditShoppingListPage from "./pages/EditShoppingListPage";
 import ViewShoppingListPage from "./pages/ViewShoppingListPage";
 import ArchivedListPage from "./pages/ArchivedListPage";
 import { ShoppingListProvider } from "./context/ShoppingListContext";
+import './App.css';
 
 
 function App() {

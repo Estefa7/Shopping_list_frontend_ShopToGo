@@ -29,7 +29,7 @@ function ArchivedListPage() {
         <p>No archived lists found.</p>
       ) : (
         archivedLists.map((list) => (
-          <div key={list.id} className="card">
+          <div key={list.id} className="ShoppingListCard">
             <h3>{list.title} | Owner: {list.owner}</h3>
             <p>Members: {list.members.join(", ")}</p>
             <UnarchiveButton onUnarchive={() => unarchiveList(list.id)} />

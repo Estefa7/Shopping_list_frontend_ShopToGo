@@ -18,11 +18,11 @@ function ShoppingListCard({
   onLeave,
 }) {
   return (
-    <div className="card">
+    <div className="ShoppingListCard">
       <h3>{title}</h3>
-      <p>Owner: {owner}</p>
-      <p>Members: {members.join(", ")}</p>
-      <p>Items: {items.length} total, {resolvedCount} resolved</p>
+      <p><span>Owner:</span> {owner}</p>
+      <p><span>Members: </span>{members.join(", ")}</p>
+      <p><span>Items: </span>{items.length} total, {resolvedCount} resolved</p>
       <button onClick={onClick}>Open</button>
       <ArchiveButton onArchive={onArchive} />
       {isOwner ? (
@@ -31,6 +31,7 @@ function ShoppingListCard({
         <LeaveListButton onLeave={onLeave} />
       )}
     </div>
+
   );
 }
 

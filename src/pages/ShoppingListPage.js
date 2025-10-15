@@ -37,7 +37,8 @@ function ShoppingListPage() {
       <Header />
       <SearchBar onSearch={handleSearch} />
       <CreateListButton onClick={handleCreate} />
-
+      <ArchivedListCard onOpenArchive={handleOpenArchive} />
+      <div className="ShoppingListGrid">
       {filteredLists.map((list) => (
         <ShoppingListCard
           key={list.id}
@@ -53,7 +54,7 @@ function ShoppingListPage() {
           onLeave={() => leaveList(list.id)}
         />
       ))}
-      <ArchivedListCard onOpenArchive={handleOpenArchive} />
+    </div>
     </div>
   );
 }
