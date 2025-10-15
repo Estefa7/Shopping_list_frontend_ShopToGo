@@ -7,6 +7,7 @@ import MembersSection from "../components/ViewPage/MembersSection";
 import LeaveListButton from "../components/ViewPage/LeaveListButton";
 import ArchiveButton from "../components/ViewPage/ArchiveButton";
 import BackButton from "../components/EditPage/BackButton";
+import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 
 function ViewShoppingListPage() {
   const { id } = useParams();
@@ -15,7 +16,8 @@ function ViewShoppingListPage() {
   const { lists, updateList, archiveList, leaveList } = useShoppingLists();
   
   const shoppingList = lists.find((list) => list.id === Number(id));
-
+  const [showModal, setShowModal] = useState(false);
+  const [action, setAction] = useState(null);
   const [items, setItems] = useState(shoppingList ? shoppingList.items : []);
 
   if (!shoppingList) {
@@ -48,6 +50,23 @@ function ViewShoppingListPage() {
     navigate("/");
   };
 
+  const handleConfirmAction = (type) => {
+    setAction(type);
+    setShowModal(true);
+  };
+
+  const handleConfirm = () => {
+    if (action === "archive") archiveList(shoppingList.id);
+    else if (action === "leave") leaveList(shoppingList.id);
+    setShowModal(false);
+    navigate("/");
+  };
+
+  const handleCancel = () => {
+    setShowModal(false);
+    setAction(null);
+  };
+
   return (
     <div>
       <BackButton onBack={handleBack} />
@@ -58,8 +77,16 @@ function ViewShoppingListPage() {
         onResolveItem={handleResolveItem}
         onUnresolveItem={handleUnresolveItem}
       />
-      <ArchiveButton onArchiveList={handleArchive} />
-      <LeaveListButton onLeaveList={handleLeave} />
+      <ArchiveButton onArchiveList={() => handleConfirmAction("archive")} />
+      <LeaveListButton onLeaveList={() => handleConfirmAction("leave")} />
+
+      {showModal && (
+        <ConfirmModal
+          message={`Are you sure you want to ${action} this list?`}
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+        />
+      )}
     </div>
   );
 }

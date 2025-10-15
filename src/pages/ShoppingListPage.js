@@ -5,11 +5,15 @@ import ShoppingListCard from "../components/MainPage/ShoppingListCard";
 import CreateListButton from "../components/MainPage/CreateListButton";
 import { useNavigate } from "react-router-dom";
 import { useShoppingLists } from "../context/ShoppingListContext";
-import ArchiveButton from "../components/MainPage/ArchiveButton";
 import ArchivedListCard from "../components/MainPage/ArchivedListCard";
+import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
+
 function ShoppingListPage() {
   const { lists, archiveList, deleteList, leaveList, createList } = useShoppingLists();
   const [searchTerm, setSearchTerm] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [selectedList, setSelectedList] = useState(null);
+  const [action, setAction] = useState(null);
   const navigate = useNavigate();
 
   const handleSearch = (term) => setSearchTerm(term.toLowerCase());
@@ -28,6 +32,30 @@ function ShoppingListPage() {
     navigate("/archive")
   };
 
+  const handleConfirmAction = (list, type) => {
+    setSelectedList(list);
+    setAction(type);
+    setShowModal(true);
+  };
+
+  const handleConfirm = () => {
+    if (!selectedList || !action) return;
+
+    if (action === "delete") deleteList(selectedList.id);
+    else if (action === "leave") leaveList(selectedList.id);
+    else if (action === "archive") archiveList(selectedList.id);
+
+    setShowModal(false);
+    setSelectedList(null);
+    setAction(null);
+  };
+
+  const handleCancel = () => {
+    setShowModal(false);
+    setSelectedList(null);
+    setAction(null);
+  };
+
   const filteredLists = lists
     .filter((list) => !list.archived)
     .filter((list) => list.title?.toLowerCase().includes(searchTerm));
@@ -38,6 +66,7 @@ function ShoppingListPage() {
       <SearchBar onSearch={handleSearch} />
       <CreateListButton onClick={handleCreate} />
       <ArchivedListCard onOpenArchive={handleOpenArchive} />
+
       <div className="ShoppingListGrid">
       {filteredLists.map((list) => (
         <ShoppingListCard
@@ -49,12 +78,19 @@ function ShoppingListPage() {
           resolvedCount={list.items.filter((i) => i.resolved).length}
           isOwner={list.owner === "You"}
           onClick={() => handleOpenList(list)}
-          onArchive={() => archiveList(list.id)}
-          onDelete={() => deleteList(list.id)}
-          onLeave={() => leaveList(list.id)}
+          onArchive={() => handleConfirmAction(list, "archive")}
+            onDelete={() => handleConfirmAction(list, "delete")}
+            onLeave={() => handleConfirmAction(list, "leave")}
         />
       ))}
     </div>
+    {showModal && (
+        <ConfirmModal
+          message={`Are you sure you want to ${action} the list "${selectedList.title}"?`}
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+        />
+      )}
     </div>
   );
 }

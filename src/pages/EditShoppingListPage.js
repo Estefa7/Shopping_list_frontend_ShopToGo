@@ -7,6 +7,8 @@ import MembersSection from "../components/EditPage/MembersSection";
 import ItemList from "../components/EditPage/ItemList";
 import ArchiveButton from "../components/EditPage/ArchiveButton";
 import DeleteListButton from "../components/EditPage/DeleteListButton";
+import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
+import InputModal from "../components/InputModal/InputModal";
 
 function EditShoppingListPage() {
   const { id } = useParams();
@@ -14,11 +16,19 @@ function EditShoppingListPage() {
   const { lists, updateList, archiveList, deleteList } = useShoppingLists();
 
   const shoppingList = lists.find((list) => list.id === Number(id));
-
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showRenameModal, setShowRenameModal] = useState(false);
+  const [action, setAction] = useState(null);
   const [title, setTitle] = useState(shoppingList ? shoppingList.title : "");
   const [members, setMembers] = useState(shoppingList ? shoppingList.members : []);
   const [items, setItems] = useState(shoppingList ? shoppingList.items : []);
   const [newItemName, setNewItemName] = useState("");
+
+  const handleRename = (newTitle) => {
+    setTitle(newTitle);
+    updateList(shoppingList.id, { title: newTitle });
+    setShowRenameModal(false);
+  };
 
   if (!shoppingList) {
     return <p>Shopping list not found.</p>;
@@ -75,19 +85,62 @@ function EditShoppingListPage() {
     updateList(shoppingList.id, { items: updated });
   };
 
-  const handleDeleteList = () => {
+  /*const handleDeleteList = () => {
     if (window.confirm("Delete this list permanently?")) {
       deleteList(shoppingList.id);
       navigate("/");
     }
+  };*/
+
+  const handleConfirmAction = (type) => {
+    setAction(type);
+    setShowConfirmModal(true);
   };
+
+  const handleConfirm = () => {
+    if (action === "archive") archiveList(id);
+    else if (action === "delete") deleteList(id);
+    setShowConfirmModal(false);
+    navigate("/");
+  };
+
+  const handleCancel = () => {
+    setShowConfirmModal(false);
+    setAction(null);
+  };
+
+  /*const openRenameModal = () => {
+    setNewTitle(title);
+    setShowRenameModal(true);
+  };
+
+  const handleRenameConfirm = () => {
+    if (newTitle.trim()) {
+      setTitle(newTitle);
+      updateList(id, { title: newTitle });
+    }
+    setShowRenameModal(false);
+  };
+
+  const handleRenameCancel = () => {
+    setShowRenameModal(false);
+  };*/
 
   const handleBack = () => navigate("/");
 
   return (
     <div>
       <BackButton onBack={handleBack} />
-      <Header listName={title} onChangeName={setTitle} />
+      <Header listName={title} onRenameClick={() => setShowRenameModal(true)} />
+        {showRenameModal && (
+        <InputModal
+          title="Rename List"
+          placeholder="Enter new name"
+          initialValue={title}
+          onConfirm={handleRename}
+          onCancel={() => setShowRenameModal(false)}
+        />
+      )}
       <MembersSection
         members={members}
         onAddMember={handleAddMember}
@@ -102,8 +155,16 @@ function EditShoppingListPage() {
         onAddItem={handleAddItem}
         setNewItemName={setNewItemName}
       />
-      <ArchiveButton onArchiveList={handleArchive} />
-      <DeleteListButton onDeleteList={handleDeleteList} />
+      <ArchiveButton onArchiveList={() => handleConfirmAction("archive")} />
+      <DeleteListButton onDeleteList={() => handleConfirmAction("delete")} />
+
+      {showConfirmModal  && (
+        <ConfirmModal
+          message={`Are you sure you want to ${action} this list?`}
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+        />
+      )}
     </div>
   );
 }
