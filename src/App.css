@@ -26,17 +26,6 @@ p {
   line-height: 1.5;
 }
 
-
-h3 {
-  margin-top: 30px;
-  margin-bottom: 10px;
-  font-size: 1.2rem;
-  background-color: #333;
-  border-left: 6px solid #b3a9d2;
-  padding-left: 10px;
-
-}
-
 button {
   margin: 6px;
   padding: 10px 18px;
@@ -83,7 +72,7 @@ button:active {
 
 .ShoppingListCard h3 {
   font-size: 1.6rem;
-  color: #b3afaf;
+  color: #615f5f;
   margin-bottom: 14px;
   font-weight: 700;
   border-bottom: 2px solid #a3d2ca;
