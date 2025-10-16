@@ -8,7 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
+  z-index: 50;
 }
 
 .modal-content {
@@ -17,12 +17,12 @@
   border-radius: 16px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   text-align: center;
-  width: 320px;
+  width: 30%;
   animation: fadeIn 0.25s ease;
 }
 
 .modal-input {
-  width: 100%;
+  width: 90%;
   margin-top: 12px;
   padding: 10px;
   border: 1px solid #ccc;

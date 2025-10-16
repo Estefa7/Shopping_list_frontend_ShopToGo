@@ -70,7 +70,8 @@ function ViewShoppingListPage() {
   return (
     <div>
       <BackButton onBack={handleBack} />
-      <Header listTitle={shoppingList.title} ownerName={shoppingList.owner} />
+      <div className="PageContainer">
+      <Header listName={shoppingList.title} ownerName={shoppingList.owner} />
       <MembersSection members={shoppingList.members} />
       <ItemList
         items={items}
@@ -87,6 +88,7 @@ function ViewShoppingListPage() {
           onCancel={handleCancel}
         />
       )}
+    </div>
     </div>
   );
 }

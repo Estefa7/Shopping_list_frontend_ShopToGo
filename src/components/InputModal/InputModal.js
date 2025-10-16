@@ -1,8 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./InputModal.css";
 
 function InputModal({ title, placeholder, initialValue = "", onConfirm, onCancel }) {
   const [value, setValue] = useState(initialValue);
+
+  useEffect(() => {
+    setValue(initialValue);
+  }, [initialValue]);
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") onConfirm(value);
+    if (e.key === "Escape") onCancel();
+  };
 
   return (
     <div className="modal-overlay">
@@ -14,9 +23,11 @@ function InputModal({ title, placeholder, initialValue = "", onConfirm, onCancel
           onChange={(e) => setValue(e.target.value)}
           placeholder={placeholder}
           className="modal-input"
+          onKeyDown={handleKeyDown}
+          autoFocus
         />
         <div className="modal-buttons">
-          <button onClick={onCancel} className="cancel">Cancel</button>
+          <button  onClick={onCancel} className="cancel">Cancel</button>
           <button
             onClick={() => {
               if (value.trim()) onConfirm(value.trim());

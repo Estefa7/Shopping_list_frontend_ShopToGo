@@ -85,13 +85,6 @@ function EditShoppingListPage() {
     updateList(shoppingList.id, { items: updated });
   };
 
-  /*const handleDeleteList = () => {
-    if (window.confirm("Delete this list permanently?")) {
-      deleteList(shoppingList.id);
-      navigate("/");
-    }
-  };*/
-
   const handleConfirmAction = (type) => {
     setAction(type);
     setShowConfirmModal(true);
@@ -109,28 +102,12 @@ function EditShoppingListPage() {
     setAction(null);
   };
 
-  /*const openRenameModal = () => {
-    setNewTitle(title);
-    setShowRenameModal(true);
-  };
-
-  const handleRenameConfirm = () => {
-    if (newTitle.trim()) {
-      setTitle(newTitle);
-      updateList(id, { title: newTitle });
-    }
-    setShowRenameModal(false);
-  };
-
-  const handleRenameCancel = () => {
-    setShowRenameModal(false);
-  };*/
-
   const handleBack = () => navigate("/");
 
   return (
     <div>
       <BackButton onBack={handleBack} />
+      <div className="PageContainer">
       <Header listName={title} onRenameClick={() => setShowRenameModal(true)} />
         {showRenameModal && (
         <InputModal
@@ -165,6 +142,7 @@ function EditShoppingListPage() {
           onCancel={handleCancel}
         />
       )}
+      </div>
     </div>
   );
 }

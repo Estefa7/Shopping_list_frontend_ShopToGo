@@ -8,6 +8,7 @@ import DeleteListButton from "../components/ArchivePage/DeleteListButton";
 import UnarchiveButton from "../components/ArchivePage/UnarchiveButton";
 import BackButton from "../components/EditPage/BackButton";
 import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
+import PageWrapper from "../components/Common/PageWrapper";
 
 function ArchivedListPage() {
   const { lists, unarchiveList, deleteList, leaveList } = useShoppingLists();
@@ -46,12 +47,14 @@ function ArchivedListPage() {
     <div>
       <BackButton onBack={handleBack} />
       <Header />
+      <div className="PageWrapper">
       <h2>Archived Shopping Lists</h2>
       <SearchBar onSearch={setSearchTerm} />
       {archivedLists.length === 0 ? (
         <p>No archived lists found.</p>
       ) : (
-        archivedLists.map((list) => (
+        <div className="ShoppingListGrid">
+        {archivedLists.map((list) => (
           <div key={list.id} className="ShoppingListCard">
             <h3>{list.title} | Owner: {list.owner}</h3>
             <p>Members: {list.members.join(", ")}</p>
@@ -62,7 +65,8 @@ function ArchivedListPage() {
               <LeaveListButton onLeave={() => handleConfirmAction(list, "leave")} />
             )}
           </div>
-        ))
+      ))}
+        </div>
       )}
       {showModal && (
         <ConfirmModal
@@ -71,6 +75,7 @@ function ArchivedListPage() {
           onCancel={handleCancel}
         />
       )}
+    </div>
     </div>
   );
 }
