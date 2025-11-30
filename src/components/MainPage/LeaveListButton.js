@@ -1,7 +1,11 @@
 import React from "react";
 
-function LeaveListButton({ onLeave }) {
-  return <button onClick={onLeave}>Leave List</button>;
+function LeaveListButton({ onLeave, disabled, label = "Leave List" }) {
+  return (
+    <button onClick={onLeave} disabled={disabled}>
+      {label}
+    </button>
+  );
 }
 
 export default LeaveListButton;

@@ -56,17 +56,24 @@ function ShoppingListPage() {
     setShowModal(true);
   };
 
-  const handleConfirm = () => {
-    if (!selectedList || !action) return;
+  const handleConfirm = async () => {
+  if (!selectedList || !action) return;
 
-    if (action === "delete") deleteList(selectedList.id);
-    else if (action === "leave") leaveList(selectedList.id);
-    else if (action === "archive") archiveList(selectedList.id);
-
+  try {
+    if (action === "delete") {
+      await deleteList(selectedList.id);
+    } else if (action === "leave") {
+      await leaveList(selectedList.id);
+    } else if (action === "archive") {
+      await archiveList(selectedList.id);
+    }
+  } finally {
     setShowModal(false);
     setSelectedList(null);
     setAction(null);
-  };
+  }
+};
+
 
   const handleCancel = () => {
     setShowModal(false);
@@ -90,17 +97,14 @@ function ShoppingListPage() {
       {filteredLists.map((list) => (
         <ShoppingListCard
           key={list.id}
-          title={list.title}
-          owner={list.owner}
-          members={list.members}
-          items={list.items}
-          resolvedCount={list.items.filter((i) => i.resolved).length}
+          list={list}
           isOwner={list.owner === "You"}
           onClick={() => handleOpenList(list)}
           onArchive={() => handleConfirmAction(list, "archive")}
-            onDelete={() => handleConfirmAction(list, "delete")}
-            onLeave={() => handleConfirmAction(list, "leave")}
+          onDelete={() => handleConfirmAction(list, "delete")}
+          onLeave={() => handleConfirmAction(list, "leave")}
         />
+
       ))}
     </div>
     {showModal && (

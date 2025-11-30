@@ -3,35 +3,59 @@ import EditViewButton from "./EditViewButton";
 import ArchiveButton from "./ArchiveButton";
 import DeleteListButton from "./DeleteListButton";
 import LeaveListButton from "./LeaveListButton";
-
+import { useShoppingLists } from "../../context/ShoppingListContext";
 
 function ShoppingListCard({
-  title,
-  owner,
-  members,
-  items,
-  resolvedCount,
+  list,
   isOwner,
   onClick,
   onArchive,
   onDelete,
   onLeave,
 }) {
+
+  const { operationStatus } = useShoppingLists();
+
+  const archivePending = operationStatus[`list:${list.id}:archive`]?.status === "pending";
+  const deletePending = operationStatus[`list:${list.id}:delete`]?.status === "pending";
+  const leavePending = operationStatus[`list:${list.id}:leave`]?.status === "pending";
+
   return (
     <div className="ShoppingListCard">
-      <h3>{title}</h3>
-      <p><span>Owner:</span> {owner}</p>
-      <p><span>Members: </span>{members.join(", ")}</p>
-      <p><span>Items: </span>{items.length} total, {resolvedCount} resolved</p>
+      <h3>{list.title}</h3>
+
+      <p><span>Owner: </span>{list.owner}</p>
+      <p><span>Members: </span>{list.members.join(", ")}</p>
+      <p>
+        <span>Items: </span>
+        {list.items.length} total, {list.items.filter(i => i.resolved).length} resolved
+      </p>
+
+      {/* Открыть */}
       <button onClick={onClick}>Open</button>
-      <ArchiveButton onArchive={onArchive} />
+
+      {/* Archive */}
+      <ArchiveButton
+        onArchive={onArchive}
+        disabled={archivePending}
+        label={archivePending ? "Archiving..." : "Archive"}
+      />
+
+      {/* Delete / Leave */}
       {isOwner ? (
-        <DeleteListButton onDelete={onDelete} />
+        <DeleteListButton
+          onDelete={onDelete}
+          disabled={deletePending}
+          label={deletePending ? "Deleting..." : "Delete"}
+        />
       ) : (
-        <LeaveListButton onLeave={onLeave} />
+        <LeaveListButton
+          onLeave={onLeave}
+          disabled={leavePending}
+          label={leavePending ? "Leaving..." : "Leave List"}
+        />
       )}
     </div>
-
   );
 }
 
