@@ -9,9 +9,11 @@ import UnarchiveButton from "../components/ArchivePage/UnarchiveButton";
 import BackButton from "../components/EditPage/BackButton";
 import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 import PageWrapper from "../components/Common/PageWrapper";
+import Loader from "../components/Common/Loader";
+import ErrorBanner from "../components/Common/ErrorBanner";
 
 function ArchivedListPage() {
-  const { lists, unarchiveList, deleteList, leaveList } = useShoppingLists();
+  const { lists, listsPending, listsError, unarchiveList, deleteList, leaveList } = useShoppingLists();
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedList, setSelectedList] = useState(null);
@@ -19,6 +21,9 @@ function ArchivedListPage() {
   const navigate = useNavigate();
 
   const handleBack = () => navigate("/");
+
+  if (listsPending) return <Loader />;
+  if (listsError) return <ErrorBanner message={listsError} />;
 
   const archivedLists = lists
     .filter((l) => l.archived)
@@ -51,7 +56,7 @@ function ArchivedListPage() {
       <h2>Archived Shopping Lists</h2>
       <SearchBar onSearch={setSearchTerm} />
       {archivedLists.length === 0 ? (
-        <p>No archived lists found.</p>
+        <ErrorBanner message="No archived lists found." />
       ) : (
         <div className="ShoppingListGrid">
         {archivedLists.map((list) => (

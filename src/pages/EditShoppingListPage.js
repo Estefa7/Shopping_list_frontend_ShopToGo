@@ -9,11 +9,13 @@ import ArchiveButton from "../components/EditPage/ArchiveButton";
 import DeleteListButton from "../components/EditPage/DeleteListButton";
 import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 import InputModal from "../components/InputModal/InputModal";
+import Loader from "../components/Common/Loader";
+import ErrorBanner from "../components/Common/ErrorBanner";
 
 function EditShoppingListPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { lists, updateList, archiveList, deleteList } = useShoppingLists();
+  const { lists, listsPending, listsError, updateList, archiveList, deleteList } = useShoppingLists();
 
   const shoppingList = lists.find((list) => list.id === Number(id));
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -23,6 +25,13 @@ function EditShoppingListPage() {
   const [members, setMembers] = useState(shoppingList ? shoppingList.members : []);
   const [items, setItems] = useState(shoppingList ? shoppingList.items : []);
   const [newItemName, setNewItemName] = useState("");
+
+  if (listsPending) return <Loader />;
+  if (listsError) return <ErrorBanner message={listsError} />;
+  if (!shoppingList) {
+    return <ErrorBanner message="Shopping list not found." />;
+  }
+
 
   const handleRename = (newTitle) => {
     setTitle(newTitle);

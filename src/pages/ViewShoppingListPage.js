@@ -8,22 +8,28 @@ import LeaveListButton from "../components/ViewPage/LeaveListButton";
 import ArchiveButton from "../components/ViewPage/ArchiveButton";
 import BackButton from "../components/EditPage/BackButton";
 import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
+import Loader from '../components/Common/Loader';
+import ErrorBanner from '../components/Common/ErrorBanner';
+
 
 function ViewShoppingListPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const handleBack = () => navigate("/");
-  const { lists, updateList, archiveList, leaveList } = useShoppingLists();
+  const { lists, listsPending, listsError, updateList, archiveList, leaveList } = useShoppingLists();
   
   const shoppingList = lists.find((list) => list.id === Number(id));
+  const [items, setItems] = useState(shoppingList ? shoppingList.items : []);
   const [showModal, setShowModal] = useState(false);
   const [action, setAction] = useState(null);
-  const [items, setItems] = useState(shoppingList ? shoppingList.items : []);
 
-  if (!shoppingList) {
-    return <p>Shopping list not found.</p>;
-  }
+ 
+  if (listsPending) return <Loader />;
+  if (listsError) return <ErrorBanner message={listsError} />;
+  if (!shoppingList) return <ErrorBanner message="Shopping list not found." />;
 
+
+ 
   const handleResolveItem = (itemId) => {
     const updatedItems = items.map((item) =>
       item.id === itemId ? { ...item, resolved: true } : item
@@ -40,15 +46,6 @@ function ViewShoppingListPage() {
     updateList(shoppingList.id, { items: updatedItems });
   };
 
-  const handleArchive = () => {
-    archiveList(shoppingList.id);
-    navigate("/archive");
-  };
-
-  const handleLeave = () => {
-    leaveList(shoppingList.id);
-    navigate("/");
-  };
 
   const handleConfirmAction = (type) => {
     setAction(type);

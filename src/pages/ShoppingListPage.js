@@ -8,9 +8,11 @@ import { useShoppingLists } from "../context/ShoppingListContext";
 import ArchivedListCard from "../components/MainPage/ArchivedListCard";
 import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 import InputModal from "../components/InputModal/InputModal";
+import Loader from "../components/Common/Loader";
+import ErrorBanner from "../components/Common/ErrorBanner";
 
 function ShoppingListPage() {
-  const { lists, archiveList, deleteList, leaveList, createList } = useShoppingLists();
+  const { lists, listsPending, listsError, archiveList, deleteList, leaveList, createList } = useShoppingLists();
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false); 
@@ -18,6 +20,9 @@ function ShoppingListPage() {
   const [selectedList, setSelectedList] = useState(null);
   const [action, setAction] = useState(null);
   const navigate = useNavigate();
+
+  if (listsPending) return <Loader />;
+  if (listsError) return <ErrorBanner message={listsError} />;
 
   const handleSearch = (term) => setSearchTerm(term.toLowerCase());
 

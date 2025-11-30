@@ -1,8 +1,8 @@
 import { mockLists } from "./mockData";
 
-const wait = () => {
-  const randomMs = Math.floor(Math.random() * 1000) + 100;
-  return new Promise((res) => setTimeout(res, randomMs));
+const wait = (ms = null) => {
+  const delay = ms ?? (Math.floor(Math.random() * 1000) + 100);
+  return new Promise((res) => setTimeout(res, delay));
 };
 
 const findIndex = (id) =>
@@ -10,13 +10,15 @@ const findIndex = (id) =>
 
 const clone = (v) => JSON.parse(JSON.stringify(v));
 
+
+
 export async function fetchLists() {
-  await wait(250);
+  await wait();
   return clone(mockLists);
 }
 
 export async function createList(payload) {
-  await wait(200);
+  await wait();
   const nextId = Date.now();
   const newList = { id: nextId, ...payload };
   mockLists.push(newList);
@@ -24,7 +26,7 @@ export async function createList(payload) {
 }
 
 export async function updateList(id, updatedData) {
-  await wait(200);
+  await wait();
   const idx = findIndex(id);
   if (idx === -1) throw new Error("List not found");
   mockLists[idx] = { ...mockLists[idx], ...updatedData };
@@ -32,11 +34,11 @@ export async function updateList(id, updatedData) {
 }
 
 export async function deleteList(id) {
-  await wait(200);
+  await wait();
   const idx = findIndex(id);
   if (idx === -1) throw new Error("List not found");
   mockLists.splice(idx, 1);
-  return { success: true };
+  return true;
 }
 
 export async function archiveList(id) {
@@ -48,7 +50,7 @@ export async function unarchiveList(id) {
 }
 
 export async function leaveList(id, memberName = "You") {
-  await wait(200);
+  await wait();
   const idx = findIndex(id);
   if (idx === -1) throw new Error("List not found");
   mockLists[idx].members = mockLists[idx].members.filter((m) => m !== memberName);
@@ -56,7 +58,7 @@ export async function leaveList(id, memberName = "You") {
 }
 
 export async function addItem(id, itemPayload) {
-  await wait(180);
+  await wait();
   const idx = findIndex(id);
   if (idx === -1) throw new Error("List not found");
   const newItem = { id: Date.now(), ...itemPayload };
@@ -65,7 +67,7 @@ export async function addItem(id, itemPayload) {
 }
 
 export async function updateItem(listId, itemId, data) {
-  await wait(150);
+  await wait();
   const idx = findIndex(listId);
   if (idx === -1) throw new Error("List not found");
   const items = mockLists[idx].items;
@@ -76,12 +78,12 @@ export async function updateItem(listId, itemId, data) {
 }
 
 export async function deleteItem(listId, itemId) {
-  await wait(150);
+  await wait();
   const idx = findIndex(listId);
   if (idx === -1) throw new Error("List not found");
   const items = mockLists[idx].items;
   const itemIdx = items.findIndex((it) => String(it.id) === String(itemId));
   if (itemIdx === -1) throw new Error("Item not found");
   items.splice(itemIdx, 1);
-  return { success: true };
+  return true;
 }
