@@ -11,6 +11,7 @@ import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 import InputModal from "../components/InputModal/InputModal";
 import Loader from "../components/Common/Loader";
 import ErrorBanner from "../components/Common/ErrorBanner";
+import PieChart from "../components/Common/PieChart";
 
 function EditShoppingListPage() {
   const { id } = useParams();
@@ -25,6 +26,8 @@ function EditShoppingListPage() {
   const [members, setMembers] = useState(shoppingList ? shoppingList.members : []);
   const [items, setItems] = useState(shoppingList ? shoppingList.items : []);
   const [newItemName, setNewItemName] = useState("");
+  const totalItems = items.length;
+  const resolvedItems = items.filter(i => i.resolved).length;
 
   if (listsPending) return <Loader />;
   if (listsError) return <ErrorBanner message={listsError} />;
@@ -116,8 +119,7 @@ function EditShoppingListPage() {
   return (
     <div>
       <BackButton onBack={handleBack} />
-      <div className="PageContainer">
-      <Header listName={title} onRenameClick={() => setShowRenameModal(true)} />
+       <Header listName={title} onRenameClick={() => setShowRenameModal(true)} />
         {showRenameModal && (
         <InputModal
           title="Rename List"
@@ -127,6 +129,9 @@ function EditShoppingListPage() {
           onCancel={() => setShowRenameModal(false)}
         />
       )}
+
+      <div className="PageContainer EditPageLayout">
+      <div className="EditMain">
       <MembersSection
         members={members}
         onAddMember={handleAddMember}
@@ -141,6 +146,15 @@ function EditShoppingListPage() {
         onAddItem={handleAddItem}
         setNewItemName={setNewItemName}
       />
+      </div>
+      <div className="EditSidebar">
+        <h3>Progress</h3>
+        <PieChart resolved={resolvedItems} total={totalItems} />
+        <p style={{ marginTop: 12 }}>
+          {resolvedItems} / {totalItems} items completed
+        </p>
+      </div>
+      </div>
       <ArchiveButton onArchiveList={() => handleConfirmAction("archive")} />
       <DeleteListButton onDeleteList={() => handleConfirmAction("delete")} />
 
@@ -152,7 +166,6 @@ function EditShoppingListPage() {
         />
       )}
       </div>
-    </div>
   );
 }
 

@@ -148,3 +148,35 @@ input[type="text"]:focus {
   padding: 0 40px;
   margin-top: 20px;
 }
+
+.ListLayout {
+  display: flex;
+  align-items:flex-start;
+  gap: 32x;
+}
+.EditPageLayout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.ListMain {
+  flex: 1;
+}
+.EditMain {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ListSide {
+  width: 260px;
+  position:sticky;
+  top:100px;
+}
+.EditSidebar {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px;
+}

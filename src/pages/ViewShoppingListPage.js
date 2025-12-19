@@ -10,6 +10,7 @@ import BackButton from "../components/EditPage/BackButton";
 import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 import Loader from '../components/Common/Loader';
 import ErrorBanner from '../components/Common/ErrorBanner';
+import PieChart from "../components/Common/PieChart";
 
 
 function ViewShoppingListPage() {
@@ -64,17 +65,32 @@ function ViewShoppingListPage() {
     setAction(null);
   };
 
+  const resolvedItems = items.filter((item) => item.resolved).length;
+  const totalItems = items.length;
+
+
   return (
     <div>
       <BackButton onBack={handleBack} />
-      <div className="PageContainer">
       <Header listName={shoppingList.title} ownerName={shoppingList.owner} />
+      <div className="PageContainer EditPageLayout">
+      <div className="EditMain">
       <MembersSection members={shoppingList.members} />
       <ItemList
         items={items}
         onResolveItem={handleResolveItem}
         onUnresolveItem={handleUnresolveItem}
       />
+      </div>
+      <div className="EditSidebar">
+        <h3>Progress</h3>
+          <PieChart resolved={resolvedItems} total={totalItems} />
+          <p style={{ marginTop: 12 }}>
+            {resolvedItems} / {totalItems} items completed
+          </p>
+        </div>
+      </div>
+
       <ArchiveButton onArchiveList={() => handleConfirmAction("archive")} />
       <LeaveListButton onLeaveList={() => handleConfirmAction("leave")} />
 
@@ -85,7 +101,6 @@ function ViewShoppingListPage() {
           onCancel={handleCancel}
         />
       )}
-    </div>
     </div>
   );
 }
