@@ -10,6 +10,7 @@ import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 import InputModal from "../components/InputModal/InputModal";
 import Loader from "../components/Common/Loader";
 import ErrorBanner from "../components/Common/ErrorBanner";
+import ThemeToggle from "../components/Common/ThemeToggle";
 
 function ShoppingListPage() {
   const { lists, listsPending, listsError, archiveList, deleteList, leaveList, createList } = useShoppingLists();
@@ -87,7 +88,14 @@ function ShoppingListPage() {
 
   return (
     <div>
-      <Header />
+      <div style={{ position: "relative", marginBottom: "20px" }}>
+      <h1 style={{ textAlign: "center" }}>ShopToGo</h1>
+
+      <div style={{ position: "absolute", right: 0, top: "50%", transform: "translateY(-50%)" }}>
+        <ThemeToggle />
+      </div>
+    </div>
+
       <div className="PageWrapper">     
       <SearchBar onSearch={handleSearch} />
       <CreateListButton onClick={handleCreateClick} />

@@ -1,3 +1,23 @@
+:root {
+  --modal-bg: #ffffff;
+  --modal-text: #333;
+  --modal-shadow: rgba(0, 0, 0, 0.15);
+
+  --modal-cancel-bg: #ddd;
+  --modal-cancel-text: #333;
+  --modal-cancel-hover: #ccc;
+}
+
+[data-theme="dark"] {
+  --modal-bg: #2a2a2a;
+  --modal-text: #f2f2f2;
+  --modal-shadow: rgba(0, 0, 0, 0.6);
+
+  --modal-cancel-bg: #444;
+  --modal-cancel-text: #eee;
+  --modal-cancel-hover: #666;
+}
+
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -10,18 +30,19 @@
 }
 
 .modal-box {
-  background: #fff;
+  background: var(--modal-bg);
+  color: var(--modal-text);
   border-radius: 16px;
   padding: 30px 40px;
   width: 320px;
   text-align: center;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 20px var(--modal-shadow);
   animation: modalFadeIn 0.25s ease;
 }
 
 .modal-box p {
   font-size: 1.1rem;
-  color: #333;
+  color: var(--modal-text);
   margin-bottom: 25px;
 }
 
@@ -32,7 +53,7 @@
 }
 
 button.confirm {
-  background-color: #5eaaa8;
+  background-color: var(--accent);
   color: white;
   border: none;
   border-radius: 10px;
@@ -43,8 +64,8 @@ button.confirm {
 }
 
 button.cancel {
-  background-color: #ddd;
-  color: #333;
+  background-color: var(--modal-cancel-bg);
+  color: var(--modal-cancel-text);
   border: none;
   border-radius: 10px;
   padding: 8px 16px;
@@ -58,7 +79,7 @@ button.confirm:hover {
 }
 
 button.cancel:hover {
-  background-color: #ccc;
+  background-color: var(--modal-cancel-hover);
 }
 
 @keyframes modalFadeIn {

@@ -1,25 +1,73 @@
+:root {
+  --background-blobs:
+    radial-gradient(circle at 15% 25%, rgba(255, 230, 234, 0.7), transparent 60%),
+    radial-gradient(circle at 85% 40%, rgba(214, 238, 255, 0.7), transparent 60%),
+    radial-gradient(circle at 40% 80%, rgba(217, 255, 220, 0.6), transparent 60%),
+    #fafafa;
+  --bg: #ffffff;
+  --text: #222;
+  --card-bg: #f8f9fa;
+  --card-gradient-1: #fefefe;
+  --card-gradient-2: #f5f7fa;
+  --border: rgba(200, 210, 220, 0.5);
+  --accent: #5eaaa8;
+  --accent-light: #a3d2ca;
+  --button-bg: #a3d2ca;
+  --button-text: #2b2b2b;
+  --button-hover-bg: #5eaaa8;
+  --button-hover-text: #ffffff;
+  --shadow: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] {
+  --background-blobs:
+    radial-gradient(circle at 15% 25%, rgba(124, 209, 207, 0.15), transparent 60%),
+    radial-gradient(circle at 85% 40%, rgba(79, 143, 141, 0.15), transparent 60%),
+    radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.05), transparent 60%),
+    #1e1e1e;
+  --bg: #1e1e1e;
+  --text: #f2f2f2;
+  --card-bg: #2a2a2a;
+  --card-gradient-1: #2a2a2a;
+  --card-gradient-2: #242424;
+  --border: rgba(255, 255, 255, 0.1);
+  --accent: #7cd1cf;
+  --accent-light: #4f8f8d;
+  --button-bg: #4f8f8d;
+  --button-text: #ffffff;
+  --button-hover-bg: #7cd1cf;
+  --button-hover-text: #1e1e1e;
+  --shadow: rgba(0, 0, 0, 0.4);
+}
+
+body {
+  color: var(--text);
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
 .App {
   font-family: 'Inter', sans-serif;
   max-width: 1200px;
   margin: 60px auto;
   padding: 24px;
-  background-color: rgba(255, 255, 255, 0.75);
+  background-color: var(--card-bg);
   border-radius: 20px;
   backdrop-filter: blur(10px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px var(--shadow);
 }
 
 h1 {
   font-family: 'Great Vibes', cursive;
   font-size: 3rem;
-  color: #333;
+  color: var(--text);
   text-align: center;
   margin-bottom: 30px;
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 p {
-  background-color: rgba(235, 250, 248, 0.8);
+  background-color: var(--card-bg);
+  color: var(--text);
   padding: 10px;
   border-radius: 10px;
   margin-bottom: 20px;
@@ -33,16 +81,16 @@ button {
   font-weight: 600;
   border: none;
   border-radius: 12px;
-  background-color: #a3d2ca;
-  color: #2b2b2b;
+  background-color: var(--button-bg);
+  color: var(--button-text);
   cursor: pointer;
   transition: all 0.25s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 button:hover {
-  background-color: #5eaaa8;
-  color: white;
+  background-color: var(--button-hover-bg);
+  color: var(--button-hover-text);
   transform: translateY(-2px);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
 }
@@ -53,16 +101,16 @@ button:active {
 }
 
 .ShoppingListCard {
-  background: linear-gradient(145deg, #fefefe, #f5f7fa);
+  background: linear-gradient(145deg, var(--card-gradient-1), var(--card-gradient-2));
   border-radius: 20px;
   padding: 20px;
   width: 100%;
   box-sizing: border-box;
   max-width: 600px;
   margin: 20px 0;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 15px var(--shadow);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
-  border: 1px solid rgba(200, 210, 220, 0.5);
+  border: 1px solid var(--border);
 }
 
 .ShoppingListCard:hover {
@@ -72,10 +120,10 @@ button:active {
 
 .ShoppingListCard h3 {
   font-size: 1.6rem;
-  color: #615f5f;
+  color: var(--text);
   margin-bottom: 14px;
   font-weight: 700;
-  border-bottom: 2px solid #a3d2ca;
+  border-bottom: 2px solid var(--accent);
   padding-bottom: 6px;
   text-align: center;
 
@@ -98,13 +146,13 @@ button:active {
   padding: 4px 0;
   margin: 6px 0;
   border-radius: 0;
-  color: #444;
+  color: var(--text);
   font-size: 1.1rem;
 }
 
 .ShoppingListCard p span {
   font-weight: 600;
-  color: #4a6d67;
+  color: var(--accent);
 }
 
 .ShoppingListGrid {
@@ -127,21 +175,23 @@ button:active {
 
 input[type="checkbox"] {
   transform: scale(1.3);
-  accent-color: #5eaaa8;
+  accent-color: var(--accent);
   cursor: pointer;
 }
 
 input[type="text"] {
   padding: 8px 12px;
   border-radius: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text);
   font-size: 1rem;
   transition: border-color 0.25s ease;
 }
 
 input[type="text"]:focus {
   outline: none;
-  border-color: #5eaaa8;
+  border-color: var(--accent);
 }
 
 .PageWrapper {
@@ -149,11 +199,6 @@ input[type="text"]:focus {
   margin-top: 20px;
 }
 
-.ListLayout {
-  display: flex;
-  align-items:flex-start;
-  gap: 32x;
-}
 .EditPageLayout {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -161,22 +206,22 @@ input[type="text"]:focus {
   align-items: flex-start;
 }
 
-.ListMain {
-  flex: 1;
-}
 .EditMain {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.ListSide {
-  width: 260px;
-  position:sticky;
-  top:100px;
-}
 .EditSidebar {
-  background: #f8f9fa;
+  background: var(--card-bg);
   padding: 16px;
+  border: 1px solid var(--border);
   border-radius: 8px;
+}
+
+.HeaderBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }

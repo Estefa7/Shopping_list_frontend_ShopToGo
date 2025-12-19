@@ -12,6 +12,7 @@ import InputModal from "../components/InputModal/InputModal";
 import Loader from "../components/Common/Loader";
 import ErrorBanner from "../components/Common/ErrorBanner";
 import PieChart from "../components/Common/PieChart";
+import ThemeToggle from "../components/Common/ThemeToggle";
 
 function EditShoppingListPage() {
   const { id } = useParams();
@@ -118,7 +119,17 @@ function EditShoppingListPage() {
 
   return (
     <div>
-      <BackButton onBack={handleBack} />
+      <div 
+        style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: "20px"
+        }}
+      >   
+        <BackButton onBack={handleBack} />
+        <ThemeToggle />
+      </div>
        <Header listName={title} onRenameClick={() => setShowRenameModal(true)} />
         {showRenameModal && (
         <InputModal

@@ -8,9 +8,9 @@ import DeleteListButton from "../components/ArchivePage/DeleteListButton";
 import UnarchiveButton from "../components/ArchivePage/UnarchiveButton";
 import BackButton from "../components/EditPage/BackButton";
 import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
-import PageWrapper from "../components/Common/PageWrapper";
 import Loader from "../components/Common/Loader";
 import ErrorBanner from "../components/Common/ErrorBanner";
+import ThemeToggle from "../components/Common/ThemeToggle";
 
 function ArchivedListPage() {
   const { lists, listsPending, listsError, unarchiveList, deleteList, leaveList } = useShoppingLists();
@@ -50,7 +50,18 @@ function ArchivedListPage() {
 
   return (
     <div>
+    <div 
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: "20px"
+      }}
+    >
       <BackButton onBack={handleBack} />
+      <ThemeToggle />
+    </div>
+
       <Header />
       <div className="PageWrapper">
       <h2>Archived Shopping Lists</h2>
