@@ -30,8 +30,19 @@ function ShoppingListCard({
         <span>Items: </span>
         {list.items.length} total, {list.items.filter(i => i.resolved).length} resolved
       </p>
+      {/* Progress bar */}
+      <div className="ProgressBar">
+        <div
+          className="ProgressFill"
+          style={{
+            width: `${
+              (list.items.filter(i => i.resolved).length / list.items.length) * 100
+            }%`
+          }}
+        />
+      </div>
 
-      {/* Открыть */}
+      {/* Open */}
       <button onClick={onClick}>Open</button>
 
       {/* Archive */}
