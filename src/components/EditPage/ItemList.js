@@ -1,5 +1,6 @@
 import React from "react";
 import ItemCard from "./ItemCard";
+import { useLanguage } from "../../context/LanguageContext";
 
 function ItemList({
   items,
@@ -10,9 +11,11 @@ function ItemList({
   onAddItem,
   setNewItemName,
 }) {
+  const { t } = useLanguage();
+
   return (
     <div>
-      <h4>Items</h4>
+      <h4>{t("items")}</h4>
       {items.map((item) => (
         <ItemCard
         key={item.id}
@@ -28,9 +31,9 @@ function ItemList({
         type="text"
         value={newItemName}
         onChange={(e) => setNewItemName(e.target.value)}
-        placeholder="New item"
+        placeholder={t("newItem")}
       />
-      <button onClick={onAddItem}>Add New Item</button>
+      <button onClick={onAddItem}>{t("addNewItem")}</button>
     </div>
   );
 }

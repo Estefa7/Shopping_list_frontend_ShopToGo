@@ -1,18 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
-export class ErrorBoundary extends React.Component {
-  constructor(props) { super(props); this.state = { hasError: false, error: null }; }
-  static getDerivedStateFromError(error) { return { hasError: true, error }; }
-  componentDidCatch(error, info) { console.error("ErrorBoundary caught:", error, info); }
-  render() {
-    if (this.state.hasError) {
-      return (
+export default function ErrorBoundary({ children }) {
+  const { t } = useLanguage();
+  const [error, setError] = useState(null);
+
+  return (
+    <React.ErrorBoundary
+      fallbackRender={({ error }) => (
         <div style={{ padding: 24 }}>
-          <h2>Something went wrong.</h2>
-          <pre style={{ color: "#900" }}>{String(this.state.error)}</pre>
+          <h2>{t("somethingWentWrong")}</h2>
+          <pre style={{ color: "#900" }}>{String(error)}</pre>
         </div>
-      );
-    }
-    return this.props.children;
-  }
+      )}
+      onError={(err) => setError(err)}
+    >
+      {children}
+    </React.ErrorBoundary>
+  );
 }

@@ -1,7 +1,10 @@
 import React from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
 function LeaveListButton({ onLeave }) {
-  return <button onClick={onLeave}>Leave List</button>;
+  const { t } = useLanguage();
+
+  return <button onClick={onLeave}>{t("leaveList")}</button>;
 }
 
 export default LeaveListButton;

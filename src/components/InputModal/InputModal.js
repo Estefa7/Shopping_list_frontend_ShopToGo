@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./InputModal.css";
+import { useLanguage } from "../../context/LanguageContext";
 
 function InputModal({ title, placeholder, initialValue = "", onConfirm, onCancel }) {
   const [value, setValue] = useState(initialValue);
-
+  const { t } = useLanguage();
   useEffect(() => {
     setValue(initialValue);
   }, [initialValue]);
@@ -27,14 +28,14 @@ function InputModal({ title, placeholder, initialValue = "", onConfirm, onCancel
           autoFocus
         />
         <div className="modal-buttons">
-          <button  onClick={onCancel} className="cancel">Cancel</button>
+          <button  onClick={onCancel} className="cancel">{t("cancel")}</button>
           <button
             onClick={() => {
               if (value.trim()) onConfirm(value.trim());
             }}
             className="confirm"
           >
-            Save
+            {t("save")}
           </button>
         </div>
       </div>

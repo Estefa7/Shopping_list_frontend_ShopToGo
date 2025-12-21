@@ -1,6 +1,8 @@
 import React from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
 function ItemCard({ itemId, itemName, isResolved, onResolve, onUnresolve }) {
+  const { t } = useLanguage();
   return (
     <div
       style={{
@@ -20,9 +22,9 @@ function ItemCard({ itemId, itemName, isResolved, onResolve, onUnresolve }) {
         {itemName}
       </span>
       {isResolved ? (
-        <button onClick={() => onUnresolve(itemId)}>Unresolve</button>
+        <button onClick={() => onUnresolve(itemId)}>{t("unresolve")}</button>
       ) : (
-        <button onClick={() => onResolve(itemId)}>Resolve</button>
+        <button onClick={() => onResolve(itemId)}>{t("resolve")}</button>
       )}
     </div>
   );

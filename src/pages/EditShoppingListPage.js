@@ -13,8 +13,11 @@ import Loader from "../components/Common/Loader";
 import ErrorBanner from "../components/Common/ErrorBanner";
 import PieChart from "../components/Common/PieChart";
 import ThemeToggle from "../components/Common/ThemeToggle";
+import LanguageSwitcher from "../components/Common/LanguageSwitcher";
+import { useLanguage } from "../context/LanguageContext";
 
 function EditShoppingListPage() {
+  const { t } = useLanguage();
   const { id } = useParams();
   const navigate = useNavigate();
   const { lists, listsPending, listsError, updateList, archiveList, deleteList } = useShoppingLists();
@@ -33,19 +36,14 @@ function EditShoppingListPage() {
   if (listsPending) return <Loader />;
   if (listsError) return <ErrorBanner message={listsError} />;
   if (!shoppingList) {
-    return <ErrorBanner message="Shopping list not found." />;
+    return <ErrorBanner message={t("shoppingListNotFound")} />;
   }
-
 
   const handleRename = (newTitle) => {
     setTitle(newTitle);
     updateList(shoppingList.id, { title: newTitle });
     setShowRenameModal(false);
   };
-
-  if (!shoppingList) {
-    return <p>Shopping list not found.</p>;
-  }
 
   const handleAddMember = (name) => {
     if (name.trim() && !members.includes(name)) {
@@ -87,11 +85,6 @@ function EditShoppingListPage() {
     updateList(shoppingList.id, { items: updated });
   };
 
-  const handleArchive = () => {
-    archiveList(shoppingList.id);
-    navigate("/archive");
-  };
-
   const handleDelete = (itemId) => {
     const updated = items.filter(item => item.id !== itemId);
     setItems(updated);
@@ -120,21 +113,26 @@ function EditShoppingListPage() {
   return (
     <div>
       <div 
-        style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: "20px"
+          style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "20px"
         }}
       >   
         <BackButton onBack={handleBack} />
-        <ThemeToggle />
+
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <LanguageSwitcher />
+          <ThemeToggle />
+        </div>
       </div>
+
        <Header listName={title} onRenameClick={() => setShowRenameModal(true)} />
         {showRenameModal && (
         <InputModal
-          title="Rename List"
-          placeholder="Enter new name"
+          title={t("renameList")}
+          placeholder={t("enterNewName")}
           initialValue={title}
           onConfirm={handleRename}
           onCancel={() => setShowRenameModal(false)}
@@ -159,19 +157,22 @@ function EditShoppingListPage() {
       />
       </div>
       <div className="EditSidebar">
-        <h3>Progress</h3>
+        <h3>{t("progress")}</h3>
         <PieChart resolved={resolvedItems} total={totalItems} />
         <p style={{ marginTop: 12 }}>
-          {resolvedItems} / {totalItems} items completed
+          {resolvedItems} / {totalItems} {t("itemsCompleted")}
         </p>
       </div>
       </div>
+
       <ArchiveButton onArchiveList={() => handleConfirmAction("archive")} />
       <DeleteListButton onDeleteList={() => handleConfirmAction("delete")} />
 
       {showConfirmModal  && (
         <ConfirmModal
-          message={`Are you sure you want to ${action} this list?`}
+          message={t("confirmActionMessageSimple", {
+            action: t(action),
+          })}
           onConfirm={handleConfirm}
           onCancel={handleCancel}
         />

@@ -1,12 +1,15 @@
 import React from "react";
 import ItemCard from "./ItemCard";
+import { useLanguage } from "../../context/LanguageContext";
 
 function ItemList({ items, onResolveItem, onUnresolveItem }) {
+  const { t } = useLanguage();
+
   return (
     <div>
-      <h3>Items:</h3>
+      <h3>{t("items")}:</h3>
       {items.length === 0 ? (
-        <p>No items in this list.</p>
+        <p>{t("noItemsInList")}</p>
       ) : (
         items.map((item) => (
           <ItemCard

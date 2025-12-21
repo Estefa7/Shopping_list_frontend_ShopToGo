@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
 function ThemeToggle() {
   const [theme, setTheme] = useState(
     localStorage.getItem("theme") || "light"
   );
+  const { t } = useLanguage();
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -12,7 +14,7 @@ function ThemeToggle() {
 
   return (
     <button onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
-      {theme === "light" ? "🌙 Dark mode" : "☀️ Light mode"}
+      {theme === "light" ? `🌙 ${t("darkMode")}` : `☀️ ${t("lightMode")}`}
     </button>
   );
 }

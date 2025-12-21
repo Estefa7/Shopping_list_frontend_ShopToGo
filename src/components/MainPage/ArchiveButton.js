@@ -1,9 +1,12 @@
 import React from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
-function ArchiveButton({ onArchive, disabled, label = "Archive" }) {
+function ArchiveButton({ onArchive, disabled, label }) {
+  const { t } = useLanguage();
+
   return (
     <button onClick={onArchive} disabled={disabled}>
-      {label}
+      {label || t("archive")}
     </button>
   );
 }

@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useState, useEffect  } from "react";
 import * as api from "../api/api";
-console.log("api object:", api);
+import { useLanguage } from "../context/LanguageContext";
 
 const ShoppingListContext = createContext();
 
 export const useShoppingLists = () => useContext(ShoppingListContext);
 
 export const ShoppingListProvider = ({ children }) => {
+  const { t } = useLanguage();
   const [lists, setLists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -24,12 +25,10 @@ export const ShoppingListProvider = ({ children }) => {
       setOp(key, "success", null);
       return result;
     } catch (e) {
-      const msg = e?.message || "Unknown error";
+      const msg = e?.message || t("unknownError");
       setOp(key, "error", msg);
       setError(msg);
       throw e;
-    } finally {
-      // если нужен переход в idle — можно оставить success, или вернуть в idle после delay
     }
   };
 
@@ -44,45 +43,17 @@ export const ShoppingListProvider = ({ children }) => {
       })
       .catch((e) => {
         console.error(e);
-        setError(e.message || "Failed to load lists");
+        setError(e.message || t("failedToLoadLists"));
       })
       .finally(() => mounted && setLoading(false));
     return () => (mounted = false);
-  }, []);
+  }, [t]);
 
   const createList = async (title) => {
-    const payload = { title, owner: "You", members: ["You"], items: [], archived: false };
+    const payload = { title, owner: t("you"), members: [t("you")], items: [], archived: false };
     const created = await runApi("createList", () => api.createList(payload));
     setLists((prev) => [...prev, created]);
     return created;
-  };
-
-  const updateList = async (id, updatedData) => {
-    const updated = await runApi(`list:${id}:update`, () => api.updateList(id, updatedData));
-    setLists((prev) => prev.map((l) => (String(l.id) === String(updated.id) ? updated : l)));
-    return updated;
-  };
-
-  const deleteList = async (id) => {
-    await runApi(`list:${id}:delete`, () => api.deleteList(id));
-    setLists((prev) => prev.filter((l) => String(l.id) !== String(id)));
-  };
-
-  const addItem = async (listId, itemPayload) => {
-    const newItem = await runApi(`list:${listId}:addItem`, () => api.addItem(listId, itemPayload));
-    setLists((prev) => prev.map((l) => (String(l.id) === String(listId) ? { ...l, items: [...l.items, newItem] } : l)));
-    return newItem;
-  };
-
-  const updateItem = async (listId, itemId, data) => {
-    const updatedItem = await runApi(`list:${listId}:updateItem:${itemId}`, () => api.updateItem(listId, itemId, data));
-    setLists((prev) => prev.map((l) => (String(l.id) === String(listId) ? { ...l, items: l.items.map(it => String(it.id) === String(itemId) ? updatedItem : it) } : l)));
-    return updatedItem;
-  };
-
-  const deleteItem = async (listId, itemId) => {
-    await runApi(`list:${listId}:deleteItem:${itemId}`, () => api.deleteItem(listId, itemId));
-    setLists((prev) => prev.map((l) => (String(l.id) === String(listId) ? { ...l, items: l.items.filter(it => String(it.id) !== String(itemId)) } : l)));
   };
 
   const value = {
@@ -92,24 +63,95 @@ export const ShoppingListProvider = ({ children }) => {
     operationStatus,
     setError,
     createList,
-    updateList,
-    deleteList,
-    addItem,
-    updateItem,
-    deleteItem,
+    updateList: async (id, updatedData) => {
+      const updated = await runApi(`list:${id}:update`, () =>
+        api.updateList(id, updatedData)
+      );
+      setLists((prev) =>
+        prev.map((l) => (String(l.id) === String(updated.id) ? updated : l))
+      );
+      return updated;
+    },
+    deleteList: async (id) => {
+      await runApi(`list:${id}:delete`, () => api.deleteList(id));
+      setLists((prev) => prev.filter((l) => String(l.id) !== String(id)));
+    },
+    addItem: async (listId, itemPayload) => {
+      const newItem = await runApi(`list:${listId}:addItem`, () =>
+        api.addItem(listId, itemPayload)
+      );
+      setLists((prev) =>
+        prev.map((l) =>
+          String(l.id) === String(listId)
+            ? { ...l, items: [...l.items, newItem] }
+            : l
+        )
+      );
+      return newItem;
+       },
+    updateItem: async (listId, itemId, data) => {
+      const updatedItem = await runApi(
+        `list:${listId}:updateItem:${itemId}`,
+        () => api.updateItem(listId, itemId, data)
+      );
+      setLists((prev) =>
+        prev.map((l) =>
+          String(l.id) === String(listId)
+            ? {
+                ...l,
+                items: l.items.map((it) =>
+                  String(it.id) === String(itemId) ? updatedItem : it
+                ),
+              }
+            : l
+        )
+      );
+      return updatedItem;
+    },
+    deleteItem: async (listId, itemId) => {
+      await runApi(`list:${listId}:deleteItem:${itemId}`, () =>
+        api.deleteItem(listId, itemId)
+      );
+      setLists((prev) =>
+        prev.map((l) =>
+          String(l.id) === String(listId)
+            ? {
+                ...l,
+                items: l.items.filter((it) => String(it.id) !== String(itemId)),
+              }
+            : l
+        )
+      );
+    },
     archiveList: async (id) => {
-      const updated = await runApi(`list:${id}:archive`, () => api.archiveList(id));
-      setLists(prev => prev.map(l => String(l.id) === String(updated.id) ? updated : l));
+      const updated = await runApi(`list:${id}:archive`, () =>
+        api.archiveList(id)
+      );
+      setLists((prev) =>
+        prev.map((l) => (String(l.id) === String(updated.id) ? updated : l))
+      );
     },
+
     unarchiveList: async (id) => {
-      const updated = await runApi(`list:${id}:unarchive`, () => api.unarchiveList(id));
-      setLists(prev => prev.map(l => String(l.id) === String(updated.id) ? updated : l));
+      const updated = await runApi(`list:${id}:unarchive`, () =>
+        api.unarchiveList(id)
+      );
+      setLists((prev) =>
+        prev.map((l) => (String(l.id) === String(updated.id) ? updated : l))
+      );
     },
-    leaveList: async (id, member = "You") => {
-      const updated = await runApi(`list:${id}:leave`, () => api.leaveList(id, member));
-      setLists(prev => prev.map(l => String(l.id) === String(updated.id) ? updated : l));
-    }
+
+    leaveList: async (id, member = t("you")) => {
+      const updated = await runApi(`list:${id}:leave`, () =>
+        api.leaveList(id, member)
+      );
+      setLists((prev) =>
+        prev.map((l) => (String(l.id) === String(updated.id) ? updated : l))
+      );
+    },
   };
+
+
 
   return (
     <ShoppingListContext.Provider value={value}>

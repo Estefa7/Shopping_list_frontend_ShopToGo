@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
 function CreateListButton({ onClick }) {
-  return <button onClick={onClick}>Create New List</button>;
+  const { t } = useLanguage();
+  return <button onClick={onClick}>{t("createNewList")}</button>;
 }
 
 export default CreateListButton;

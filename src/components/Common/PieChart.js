@@ -1,8 +1,11 @@
 import React from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
 function PieChart({ resolved, total, size = 240}) {
-    if (total === 0)  {
-        return <p>No items yet</p>;
+    const { t } = useLanguage();
+
+    if (total === 0) {
+        return <p>{t("noItemsYet")}</p>;
     }
 
     const actualSize = size || Math.min(window.innerWidth * 0.3, 300);

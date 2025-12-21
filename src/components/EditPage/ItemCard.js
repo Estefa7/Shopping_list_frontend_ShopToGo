@@ -1,4 +1,5 @@
 import React from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
 function ItemCard({
   itemId,
@@ -8,6 +9,7 @@ function ItemCard({
   onUnresolve,
   onDelete,
 }) {
+  const { t } = useLanguage();
   return (
     <div>
       <span style={{ textDecoration: isResolved ? "line-through" : "none" }}>
@@ -15,11 +17,11 @@ function ItemCard({
       </span>
       <input type="checkbox" checked={isResolved} readOnly />
       {isResolved ? (
-        <button onClick={() => onUnresolve(itemId)}>Unresolve</button>
+        <button onClick={() => onUnresolve(itemId)}>{t("unresolve")}</button>
       ) : (
-        <button onClick={() => onResolve(itemId)}>Resolve</button>
+        <button onClick={() => onResolve(itemId)}>{t("resolve")}</button>
       )}
-      <button onClick={() => onDelete(itemId)}>Delete</button>
+      <button onClick={() => onDelete(itemId)}>{t("delete")}</button>
     </div>
   );
 }

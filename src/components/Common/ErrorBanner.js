@@ -1,6 +1,8 @@
 import React from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function ErrorBanner({ message, onClose }) {
+  const { t } = useLanguage();
   if (!message) return null;
 
   return (
@@ -25,7 +27,7 @@ export default function ErrorBanner({ message, onClose }) {
             background: "#ffd3d3"
           }}
         >
-          Close
+          {t("close")}
         </button>
       )}
     </div>

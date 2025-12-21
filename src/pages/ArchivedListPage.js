@@ -11,8 +11,11 @@ import ConfirmModal from "../components/ConfirmModal/ConfirmModal";
 import Loader from "../components/Common/Loader";
 import ErrorBanner from "../components/Common/ErrorBanner";
 import ThemeToggle from "../components/Common/ThemeToggle";
+import LanguageSwitcher from "../components/Common/LanguageSwitcher";
+import { useLanguage } from "../context/LanguageContext";
 
 function ArchivedListPage() {
+  const { t } = useLanguage();
   const { lists, listsPending, listsError, unarchiveList, deleteList, leaveList } = useShoppingLists();
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -59,23 +62,27 @@ function ArchivedListPage() {
       }}
     >
       <BackButton onBack={handleBack} />
-      <ThemeToggle />
+      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        <LanguageSwitcher />
+        <ThemeToggle />
+      </div>
     </div>
+
 
       <Header />
       <div className="PageWrapper">
-      <h2>Archived Shopping Lists</h2>
+      <h2>{t("archivedShoppingLists")}</h2>
       <SearchBar onSearch={setSearchTerm} />
       {archivedLists.length === 0 ? (
-        <ErrorBanner message="No archived lists found." />
+        <ErrorBanner message={t("noArchivedListsFound")}  />
       ) : (
         <div className="ShoppingListGrid">
         {archivedLists.map((list) => (
           <div key={list.id} className="ShoppingListCard">
-            <h3>{list.title} | Owner: {list.owner}</h3>
-            <p>Members: {list.members.join(", ")}</p>
+            <h3>{list.title} | {t("owner")}: {list.owner}</h3>
+            <p>{t("members")}: {list.members.join(", ")}</p>
             <UnarchiveButton onUnarchive={() => handleConfirmAction(list, "unarchive")} />
-            {list.owner === "You" ? (
+            {list.owner === t("you") ? (
               <DeleteListButton onDelete={() => handleConfirmAction(list, "delete")} />
             ) : (
               <LeaveListButton onLeave={() => handleConfirmAction(list, "leave")} />
@@ -86,9 +93,12 @@ function ArchivedListPage() {
       )}
       {showModal && (
         <ConfirmModal
-          message={`Are you sure you want to ${action} the list "${selectedList.title}"?`}
-          onConfirm={handleConfirm}
-          onCancel={handleCancel}
+          message={t("confirmActionMessage", {
+              action: t(action),
+              title: selectedList.title,
+            })}
+            onConfirm={handleConfirm}
+            onCancel={handleCancel}
         />
       )}
     </div>

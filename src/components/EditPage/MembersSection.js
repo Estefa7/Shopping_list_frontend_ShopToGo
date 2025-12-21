@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
 function MembersSection({ members = [], onAddMember, onRemoveMember }) {
   const [newMember, setNewMember] = useState("");
+  const { t } = useLanguage();
 
   const handleAdd = () => {
     const trimmed = newMember.trim();
@@ -12,26 +14,26 @@ function MembersSection({ members = [], onAddMember, onRemoveMember }) {
 
   return (
     <div className="members-section">
-      <h4 className="text-lg font-semibold mb-2">Members</h4>
+      <h4 className="text-lg font-semibold mb-2">{t("members")}</h4>
 
       <div className="flex items-center gap-2 mb-3">
         <input
           type="text"
           value={newMember}
           onChange={(e) => setNewMember(e.target.value)}
-          placeholder="Add member"
+          placeholder={t("addMember")}
           className="border rounded-lg px-2 py-1 flex-1"
         />
         <button
           onClick={handleAdd}
           className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg"
         >
-          Add
+          {t("add")}
         </button>
       </div>
 
       {members.length === 0 ? (
-        <p className="text-gray-500">No members yet.</p>
+        <p className="text-gray-500">{t("noMembersYet")}</p>
       ) : (
         <ul className="space-y-1">
           {members.map((member) => (
@@ -44,7 +46,7 @@ function MembersSection({ members = [], onAddMember, onRemoveMember }) {
                 onClick={() => onRemoveMember(member)}
                 className="text-red-500 hover:text-red-700"
               >
-                Remove
+                {t("remove")}
               </button>
             </li>
           ))}

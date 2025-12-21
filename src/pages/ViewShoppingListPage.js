@@ -12,9 +12,13 @@ import Loader from '../components/Common/Loader';
 import ErrorBanner from '../components/Common/ErrorBanner';
 import PieChart from "../components/Common/PieChart";
 import ThemeToggle from "../components/Common/ThemeToggle";
+import LanguageSwitcher from "../components/Common/LanguageSwitcher";
+import { useLanguage } from "../context/LanguageContext";
+
 
 function ViewShoppingListPage() {
   const { id } = useParams();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const handleBack = () => navigate("/");
   const { lists, listsPending, listsError, updateList, archiveList, leaveList } = useShoppingLists();
@@ -27,7 +31,7 @@ function ViewShoppingListPage() {
  
   if (listsPending) return <Loader />;
   if (listsError) return <ErrorBanner message={listsError} />;
-  if (!shoppingList) return <ErrorBanner message="Shopping list not found." />;
+  if (!shoppingList) return <ErrorBanner message={t("shoppingListNotFound")}/>;
 
 
  
@@ -73,15 +77,19 @@ function ViewShoppingListPage() {
     <div>
       <div 
         style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: "20px"
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "20px"
         }}
       >   
         <BackButton onBack={handleBack} />
-        <ThemeToggle />
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <LanguageSwitcher />
+          <ThemeToggle />
+        </div>
       </div>
+
       <Header listName={shoppingList.title} ownerName={shoppingList.owner} />
       <div className="PageContainer EditPageLayout">
       <div className="EditMain">
@@ -93,10 +101,10 @@ function ViewShoppingListPage() {
       />
       </div>
       <div className="EditSidebar">
-        <h3>Progress</h3>
+        <h3>{t("progress")}</h3>
           <PieChart resolved={resolvedItems} total={totalItems} />
           <p style={{ marginTop: 12 }}>
-            {resolvedItems} / {totalItems} items completed
+            {resolvedItems} / {totalItems} {t("itemsCompleted")}
           </p>
         </div>
       </div>
@@ -106,7 +114,7 @@ function ViewShoppingListPage() {
 
       {showModal && (
         <ConfirmModal
-          message={`Are you sure you want to ${action} this list?`}
+          message={t("confirmActionMessageSimple", { action: t(action) })}
           onConfirm={handleConfirm}
           onCancel={handleCancel}
         />

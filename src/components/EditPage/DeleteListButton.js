@@ -1,7 +1,11 @@
 import React from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
 function DeleteListButton({ onDeleteList }) {
-  return <button onClick={onDeleteList}>Delete List</button>;
+  const { t } = useLanguage();
+
+  return <button onClick={onDeleteList}>{t("deleteList")}</button>;
 }
+
 
 export default DeleteListButton;

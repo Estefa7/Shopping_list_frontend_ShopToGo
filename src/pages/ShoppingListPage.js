@@ -11,8 +11,11 @@ import InputModal from "../components/InputModal/InputModal";
 import Loader from "../components/Common/Loader";
 import ErrorBanner from "../components/Common/ErrorBanner";
 import ThemeToggle from "../components/Common/ThemeToggle";
+import LanguageSwitcher from "../components/Common/LanguageSwitcher";
+import { useLanguage } from "../context/LanguageContext";
 
 function ShoppingListPage() {
+  const { t } = useLanguage();
   const { lists, listsPending, listsError, archiveList, deleteList, leaveList, createList } = useShoppingLists();
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -43,7 +46,7 @@ function ShoppingListPage() {
   };
 
   const handleOpenList = (list) => {
-    if (list.owner === "You") navigate(`/edit/${list.id}`);
+    if (list.owner === t("you")) navigate(`/edit/${list.id}`);
     else navigate(`/view/${list.id}`);
   };
 
@@ -91,9 +94,21 @@ function ShoppingListPage() {
       <div style={{ position: "relative", marginBottom: "20px" }}>
       <h1 style={{ textAlign: "center" }}>ShopToGo</h1>
 
-      <div style={{ position: "absolute", right: 0, top: "50%", transform: "translateY(-50%)" }}>
+      <div
+        style={{
+          position: "absolute",
+          right: 0,
+          top: "50%",
+          transform: "translateY(-50%)",
+          display: "flex",
+          alignItems: "center",
+          gap: "12px"
+        }}  
+      >
+        <LanguageSwitcher />
         <ThemeToggle />
       </div>
+
     </div>
 
       <div className="PageWrapper">     
@@ -106,7 +121,7 @@ function ShoppingListPage() {
         <ShoppingListCard
           key={list.id}
           list={list}
-          isOwner={list.owner === "You"}
+          isOwner={list.owner === t("you")}
           onClick={() => handleOpenList(list)}
           onArchive={() => handleConfirmAction(list, "archive")}
           onDelete={() => handleConfirmAction(list, "delete")}
@@ -117,15 +132,18 @@ function ShoppingListPage() {
     </div>
     {showModal && (
         <ConfirmModal
-          message={`Are you sure you want to ${action} the list "${selectedList.title}"?`}
+          message={t("confirmActionMessage", {
+              action: t(action),
+              title: selectedList.title,
+            })}
           onConfirm={handleConfirm}
           onCancel={handleCancel}
         />
       )}
       {showCreateModal && (
         <InputModal
-          title="Create New List"
-          placeholder="Enter list name"
+          title={t("createNewList")}
+          placeholder={t("enterListName")}
           initialValue={newListName}
           onConfirm={handleCreateConfirm}
           onCancel={handleCreateCancel}
